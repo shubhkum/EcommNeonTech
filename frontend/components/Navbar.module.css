@@ -1,5 +1,5 @@
 
-.profileSection{
+.topSection{
     width: 100%;
     display: flex;
     justify-content: end;
@@ -17,7 +17,7 @@
     font-weight: 600;
     font-size: medium;
 }
-.profileItems{
+.topItems{
     padding: 0rem 1rem;
     cursor: pointer;
     font-size: small;

@@ -3,15 +3,14 @@ import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 import {ShoppingCartIcon} from "@heroicons/react/24/outline";
 import styles from './Navbar.module.css'
 
-
 export const Navbar = () => {
 
   return (
     <div>
-        <div className={styles.profileSection}>
-            <span className={styles.profileItems}>Help</span>
-            <span className={styles.profileItems}>Orders & Returns</span>
-            <span className={styles.profileItems}>Hi, John</span>
+        <div className={styles.topSection}>
+            <span className={styles.topItems}>Help</span>
+            <span className={styles.topItems}>Orders & Returns</span>
+            <span className={styles.topItems}>Hi, John</span>
         </div>
         <div className={styles.navSection}>
             <h1 className="text-custom-xl font-bold !text-custom-xl">ECOMMERCE</h1>
@@ -28,7 +27,7 @@ export const Navbar = () => {
             </div>
         </div>
         <div style={{background:"#F4F4F4"}}>
-            <p style={{textAlign:"center",fontSize:"small",fontWeight:"600",padding:"0.25rem 0rem"}} className='font-bold'>Get 10% off on business sign up</p>            
+            <p style={{textAlign:"center",padding:"0.25rem 0rem"}} className='font-bold'>Get 10% off on business sign up</p>            
         </div>
     </div>
   )
