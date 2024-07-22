@@ -3,7 +3,6 @@ import React, {useState} from 'react'
 import styles from './signup.module.css'
 
 const Signup = () => {
-
   const [signupData,setSignupData] = useState({
     name:"",
     email:"",
