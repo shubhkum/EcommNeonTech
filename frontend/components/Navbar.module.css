@@ -1,0 +1,24 @@
+
+.profileSection{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    margin: 1rem 0rem 0rem;
+}
+.navSection{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1rem; 
+}
+.navItems{
+    padding: 0rem 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: medium;
+}
+.profileItems{
+    padding: 0rem 1rem;
+    cursor: pointer;
+    font-size: small;
+}
