@@ -15,7 +15,8 @@ const config: Config = {
       },
       fontSize: {
         'custom-xl': '1.5rem',
-        'custom-xl-2':'1rem'
+        'custom-xl-2':'1rem',
+        'custom-xl-3':'1.2rem'
       },
     },
   },
