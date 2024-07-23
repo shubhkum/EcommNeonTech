@@ -14,11 +14,11 @@ model User {
   password     String
   otp        String?
   isVerified       Boolean    @default(false)
-  selectedCategories Category[] 
+  selectedCategories Category[] @relation("UserCategories")
 }
 
 model Category {
   id           Int      @id @default(autoincrement())
   name         String
-  users         User[] 
+  users         User[] @relation("UserCategories")
 } 

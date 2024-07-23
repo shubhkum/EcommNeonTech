@@ -1,53 +1,56 @@
 const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
 const dotenv = require('dotenv')
-const {faker}  = require('@faker-js/faker')
-
 dotenv.config();
-async function main() {
-  await prisma.$connect()
-  console.log("Connected to database!")
+const {faker}  = require('@faker-js/faker')
+const  express = require('express')
+const app = express()
+app.use(express.json())
 
-  const newUser = await prisma.user.create({
-    data: {
-      name: 'Shubham',
-      email: 'shubham460kumar@gmail.com',
-      password: 'geometry',
-      otp: '222222',
-      selectedCategories: {
-        create: {
-          name: 'Shoes',
-        },
-      },
-    },
+app.get('/users', async (req, res) => {
+  const users = await prisma.user.findMany()  
+  res.json(users)
+})
+app.get('/categories', async (req, res) => {
+  const categories = await prisma.category.findMany()  
+  res.json(categories)
+})
+
+app.post(`/user`, async (req, res) => {
+  const result = await prisma.user.create({
+    data: { ...req.body },
   })
-  console.log('Created new user: ', newUser)
+  res.json(result)
+})
 
-  const allUsers = await prisma.user.findMany()
-  console.log('All users: ')
-  console.dir(allUsers, { depth: null })
-  // const categories = Array.from({ length: 200 }, () => ({
-  //   name: faker.commerce.department(),
-  // }));
-
-  // // Insert categories into the database
-  // await prisma.category.createMany({
-  //   data: categories,
-  // });
-
-  // const allCategory = await prisma.category.findMany()
-  // console.log(allCategory,'allcategory');
-  
-
-  await prisma.$disconnect()
-}
-
-main()
-  .then(async () => {
-    await prisma.$disconnect()
+app.get(`/user/:id`, async (req, res) => {
+  const {id} = req.params
+  const result = await prisma.user.findUnique({
+    where: { id: Number(id) },
   })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+  res.json(result)
+})
+
+//To update the selected category into user table
+app.put('/user/:id', async (req, res) => {
+  const { id } = req.params;
+  const { selectedCategories } = req.body; 
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: Number(id) },
+      data: { selectedCategories: { set: selectedCategories.map(categoryId => ({ id: categoryId })) } },
+      include: {
+        selectedCategories: true
+      }}
+    );
+    res.json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while updating the user' });
+  }
+});
+
+app.listen(8000, () =>
+  console.log('REST API server ready at: http://localhost:8000'),
+)
