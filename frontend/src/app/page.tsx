@@ -1,11 +1,17 @@
 "use client"
-import React , {useState} from 'react'
+import React , {useEffect, useState} from 'react'
 import styles from './verify/verify.module.css'
 import {Categories} from './constants.js'
 import { Pagination } from "antd";
+import { redirect } from 'next/navigation';
+import { useLayoutEffect } from 'react';
 
 export default function Home() {
-
+  
+  const isAuth = localStorage.getItem('isLoggedIn');
+  if(!isAuth){
+    redirect("/login")
+  }
   const [selectedCategories, setSelectedCategories] = useState(
     Categories.reduce((acc, item) => (acc[item.id] = item.checked, acc), {}));  
   const [currentPage, setCurrentPage] = useState(1);

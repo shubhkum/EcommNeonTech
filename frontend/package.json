@@ -12,6 +12,8 @@
     "@heroicons/react": "^2.1.5",
     "antd": "^5.19.3",
     "antd-input-otp": "^2.1.0",
+    "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18"

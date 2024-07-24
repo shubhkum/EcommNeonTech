@@ -1,20 +1,37 @@
 "use client";
 import React,{useState} from 'react'
 import styles from './login.module.css'
+import axios from 'axios'
+import { useRouter } from 'next/navigation';
 
-const Login = ({setIsAuthenticated}) => {
-  
+const Login = () => {
+  const BASE_URL = 'http://localhost:8000'
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
-
-  const submitLogin = (e) => {
+  const router = useRouter();
+  const submitLogin = async (e) => {
     e.preventDefault();
     if(loginData.email && loginData.password){
-        setIsAuthenticated(true)
+      try {
+        const response = await axios.post(`${BASE_URL}/verifyUser`, {
+          email: loginData.email,
+          password: loginData.password,
+        });
+        if (response.status == 200){
+          localStorage.setItem('isLoggedIn', "true")
+          setTimeout(() => {
+            router.push("/");
+          }, 100);
+        }
+        console.log('Signup successful:', response.data);
+      } catch (error) {
+        console.error('Signup error:', error);
+      }
     }
   };
+  
 
   return (
     <div className={styles.loginContainer}>

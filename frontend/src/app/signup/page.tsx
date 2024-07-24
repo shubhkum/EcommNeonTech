@@ -1,6 +1,7 @@
 "use client"
 import React, {useState} from 'react'
 import styles from './signup.module.css'
+import axios from 'axios'; 
 
 const Signup = () => {
   const [signupData,setSignupData] = useState({
@@ -8,14 +9,24 @@ const Signup = () => {
     email:"",
     password:""
   })  
-  const submitSignup = (e) => {
-    e.preventDefault()
 
+  const submitSignup = async (e) => {
+    e.preventDefault()
     if(signupData.name && signupData.email && signupData.password){
-     console.log(signupData,'signupdata');
-     
-    }
+      try {
+        const response = await axios.post('/api/user', {
+          name: signupData.name,
+          email: signupData.email,
+          password: signupData.password,
+        });
+  
+        console.log('Signup successful:', response.data);
+      } catch (error) {
+        console.error('Signup error:', error);
+      }
+    };
   }
+  
 
   return (
     <div className={styles.loginContainer}>
