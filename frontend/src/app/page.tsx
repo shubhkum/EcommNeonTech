@@ -5,36 +5,42 @@ import styles from './verify/verify.module.css'
 import { Pagination } from "antd";
 import { redirect } from 'next/navigation';
 import axios from 'axios';
-import { log } from 'console';
-
+interface Category {
+  id: number | string;
+  name: string
+}
 export default function Home() {
   const BASE_URL = 'https://ecomm-neon-tech.vercel.app'
-  const isAuth = sessionStorage.getItem('isLoggedIn');
-  if(!isAuth || !sessionStorage){
-    console.log(isAuth,'isAuth');
-    redirect("/login")
+  if (typeof window !== 'undefined') {
+    const isAuth = sessionStorage.getItem('isLoggedIn');
+    if(!isAuth || !sessionStorage){
+      console.log(isAuth,'isAuth');
+      redirect("/login")
+    }
   }
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState<Category[]>([])
   // const [selectedCategories, setSelectedCategories] = useState(
   //   Categories.reduce((acc, item) => (acc[item.id] = item.checked, acc), {}));  
-  const [selectedCategories, setSelectedCategories] = useState([])
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
   const [currentPage, setCurrentPage] = useState(1);
   const ItemsPerPage = 6;
   const indexOfLastItem = currentPage * ItemsPerPage;
   const indexOfFirstItem = indexOfLastItem - ItemsPerPage;
   const currentItems = categories?.slice(indexOfFirstItem, indexOfLastItem);
-  const [mappedSelectedIds, setMappedSelectedIds] = useState({})
+  const [mappedSelectedIds, setMappedSelectedIds] = useState<Record<string, boolean>>({})
   const [updateDb,setUpdateDb] = useState(false)
   console.log('categories',selectedCategories);
   
   useEffect(() => {
     const getSelectedCategories = async () => {
       try {
-        const id = sessionStorage.getItem("id")
-        const response = await axios.get(`${BASE_URL}/user/${id}`);
-        if (response.status == 200){
-          console.log(response,'responseeee',response?.data?.result?.[0]?.user?.selectedCategories);
-          setSelectedCategories(response?.data?.result?.[0]?.user?.selectedCategories)
+        if (typeof window == 'undefined') {
+          const id = sessionStorage.getItem("id")
+          const response = await axios.get(`${BASE_URL}/user/${id}`);
+          if (response.status == 200){
+            console.log(response,'responseeee',response?.data?.result?.[0]?.user?.selectedCategories);
+            setSelectedCategories(response?.data?.result?.[0]?.user?.selectedCategories)
+          }
         }
       } catch (error) {
         console.error('Unable to fetch selected categories', error);
@@ -61,8 +67,8 @@ export default function Home() {
 
   useEffect(() =>{
     if (selectedCategories) {
-      const newMap = {}
-      selectedCategories.forEach((item) => {
+      const newMap: Record<string | number, boolean> = {}
+      selectedCategories.forEach((item:Category) => {
         console.log('insideeffect');
         newMap[item.id] = true
       })
@@ -70,31 +76,33 @@ export default function Home() {
     }
   },[selectedCategories])
 
-  const updateCategory = async (newTempSelected) => {
+  const updateCategory = async (newTempSelected:any) => {
     try {
-      const id = sessionStorage.getItem("id")
-      const categoriesId = newTempSelected?.map((item) => item.id)
-      const response = await axios.put(`${BASE_URL}/user/${id}`,{
-        "selectedCategories" : categoriesId
-      });
-      if (response.status == 200){
-        console.log(response,'responseeee');
-        // setCategories(response?.data?.result?.[0]?.categories)
+      if (typeof window == 'undefined') {
+        const id = sessionStorage.getItem("id")
+        const categoriesId = newTempSelected?.map((item:any) => item.id)
+        const response = await axios.put(`${BASE_URL}/user/${id}`,{
+          "selectedCategories" : categoriesId
+        });
+        if (response.status == 200){
+          console.log(response,'responseeee');
+          // setCategories(response?.data?.result?.[0]?.categories)
+        }
       }
     } catch (error) {
       console.error('Unable to fetch selected categories', error);
     }
   }
 
-  const handleCheckboxChange = (itemId) => {
+  const handleCheckboxChange = (itemId:any) => {
     console.log(itemId,'itemId');
-    const categoryItem = categories?.find((item) => item.id == itemId)
+    const categoryItem: Category | undefined = categories?.find((item:any) => item.id === itemId)
     if (mappedSelectedIds[itemId]) {
       console.log('inside');
-      const newTempSelected = selectedCategories.filter((item) => item.id !== itemId)
+      const newTempSelected = selectedCategories.filter((item:any) => item.id !== itemId)
       setSelectedCategories((prevCategories) => {
         if (!prevCategories) return []
-        const newSelected = prevCategories.filter((item) => item.id !== itemId)
+        const newSelected = prevCategories.filter((item:any) => item.id !== itemId)
         return newSelected
       });
       updateCategory(newTempSelected)
@@ -102,11 +110,11 @@ export default function Home() {
       const newTempSelected = [...selectedCategories, categoryItem]
       updateCategory(newTempSelected)
       console.log('inside not');
-      setSelectedCategories((prevCategories) => ([...prevCategories,categoryItem ]))
+      setSelectedCategories((prevCategories) => ([...prevCategories,...(categoryItem ? [categoryItem]: []) ]))
     }
   };
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page:any) => {
     setCurrentPage(page);
   };
   return (
@@ -124,13 +132,13 @@ export default function Home() {
                   <div className='flex items-center'>
                     <input
                       type="checkbox"
-                      id={item.id}
+                      id={(item.id as string)}
                       checked={mappedSelectedIds[item.id] ? true : false} 
                       onChange={() => handleCheckboxChange(item.id)} 
                       style={{width:'20px',height:'20px',margin:'0 0.8rem 0'}}
                     />
                   </div>
-                    <label style={{textAlign:'left'}} htmlFor={item.id} className='font-bold text-custom-xl-3 !text-custom-xl-3'>{item.name}</label>
+                    <label style={{textAlign:'left'}} htmlFor={(item.id as string)} className='font-bold text-custom-xl-3 !text-custom-xl-3'>{item.name}</label>
                 </div>
               ))}
             </div>

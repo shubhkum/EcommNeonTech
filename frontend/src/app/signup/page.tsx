@@ -13,7 +13,7 @@ const Signup = () => {
     password:""
   })  
 
-  const submitSignup = async (e) => {
+  const submitSignup = async (e:any) => {
     e.preventDefault()
     if(signupData.name && signupData.email && signupData.password){
       try {

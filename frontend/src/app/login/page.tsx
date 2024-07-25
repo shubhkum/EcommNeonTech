@@ -12,7 +12,7 @@ const Login = () => {
     password: "",
   });
   const router = useRouter();
-  const submitLogin = async (e) => {
+  const submitLogin = async (e:any) => {
     e.preventDefault();
     if(loginData.email && loginData.password){
       try {
@@ -59,7 +59,7 @@ const Login = () => {
           </div>
           <button className={styles.loginButton}>LOGIN</button>
           <span className={styles.linkContainer}>
-            <p>Don't have an Account?</p>
+            <p>{`Don't have an Account?`}</p>
             <span onClick={() => router.push('/signup')} className={styles.signupBtn} >
               SIGN UP
             </span>
