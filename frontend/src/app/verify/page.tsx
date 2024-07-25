@@ -2,12 +2,16 @@
 import React,{useState} from 'react'
 import styles from './verify.module.css'
 import { InputOTP } from 'antd-input-otp';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const Verify = () => {
-  const [value, setValue] = useState([]); 
+  const [value, setValue] = useState([]);
+  const router = useRouter() 
   console.log(value,'value');
+  const BASE_URL = 'http://localhost:8000'
   
-  const handleSubmit = (otp) => {
+  const handleSubmit = async (otp) => {
     const payload = otp || value;
     let isEmpty = false
     for (let i=0 ;i<payload.length;i++){
@@ -17,7 +21,23 @@ const Verify = () => {
       }
     }
     if(payload.length === 6 && !isEmpty){
-      console.log(otp,'otp');
+      try {
+        const email = sessionStorage.getItem("email")
+
+        const response = await axios.post(`${BASE_URL}/verifyEmail`, {
+          email: email,
+          otp: otp.join(""),
+        });
+        if (response.status == 200){
+          sessionStorage.setItem('isLoggedIn', "true")
+          setTimeout(() => {
+            router.push("/");
+          }, 100);
+        }
+        console.log('Login successful:', response.data);
+      } catch (error) {
+        console.error('Login error:', error);
+      }
     }
     console.log(payload,'payload');
   };  

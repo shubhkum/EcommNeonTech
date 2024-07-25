@@ -2,8 +2,11 @@
 import React, {useState} from 'react'
 import styles from './signup.module.css'
 import axios from 'axios'; 
+import { useRouter } from 'next/navigation';
 
 const Signup = () => {
+  const BASE_URL = 'http://localhost:8000'
+  const router = useRouter()
   const [signupData,setSignupData] = useState({
     name:"",
     email:"",
@@ -14,12 +17,21 @@ const Signup = () => {
     e.preventDefault()
     if(signupData.name && signupData.email && signupData.password){
       try {
-        const response = await axios.post('/api/user', {
+        const response = await axios.post(`${BASE_URL}/user`, {
           name: signupData.name,
           email: signupData.email,
           password: signupData.password,
         });
-  
+        if (response.status == 200){
+          console.log(response,'response');
+          const email = response?.data?.result?.[0]?.user?.email
+          const id = response?.data?.result?.[0]?.user?.id
+          sessionStorage.setItem("email",email)
+          sessionStorage.setItem("id",id)
+          setTimeout(() => {
+            router.push("/verify");
+          }, 100);
+        }
         console.log('Signup successful:', response.data);
       } catch (error) {
         console.error('Signup error:', error);
@@ -50,7 +62,7 @@ const Signup = () => {
           <button className={styles.loginButton}>CREATE ACCOUNT</button>
           <span className={styles.linkContainer}>
             <p>Have an Account ?</p>
-            <button type="submit" className={styles.signupBtn}>LOGIN</button> 
+            <span onClick={() => router.push('/login')} className={styles.signupBtn}>LOGIN</span> 
           </span>
         </form>
       </div>

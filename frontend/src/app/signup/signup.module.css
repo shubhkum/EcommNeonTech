@@ -46,5 +46,6 @@
   .signupBtn{
     font-weight: bold;
     margin-left: 0.5rem;
+    cursor: pointer;
   }
   

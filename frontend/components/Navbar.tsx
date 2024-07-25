@@ -1,10 +1,21 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 import {ShoppingCartIcon} from "@heroicons/react/24/outline";
 import styles from './Navbar.module.css'
+import { useRouter } from 'next/navigation';
+
 
 export const Navbar = () => {
-
+    const router = useRouter();
+    const handleLogout = () => {
+        sessionStorage.removeItem('isLoggedIn')
+        sessionStorage.removeItem('email')
+        sessionStorage.removeItem('id')
+        setTimeout(() => {
+            router.push("/login");
+          }, 100);
+    }
   return (
     <div>
         <div className={styles.topSection}>
@@ -24,6 +35,10 @@ export const Navbar = () => {
             <div style={{display:'flex'}}>
                 <MagnifyingGlassIcon  style={{width:'30px',height:'30px',cursor:'pointer'}}/>        
                 <ShoppingCartIcon style={{width:'30px',height:'30px',margin:"0rem 1.5rem",cursor:'pointer'}}/>
+                <span onClick={handleLogout} style={{width:'30px',height:'30px',margin:"0rem 1.5rem",cursor:'pointer'}}>
+                    Logout
+                </span>
+            
             </div>
         </div>
         <div style={{background:"#F4F4F4"}}>

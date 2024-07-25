@@ -4,6 +4,7 @@ import styles from './login.module.css'
 import axios from 'axios'
 import { useRouter } from 'next/navigation';
 
+
 const Login = () => {
   const BASE_URL = 'http://localhost:8000'
   const [loginData, setLoginData] = useState({
@@ -20,14 +21,16 @@ const Login = () => {
           password: loginData.password,
         });
         if (response.status == 200){
-          localStorage.setItem('isLoggedIn', "true")
+          sessionStorage.setItem('isLoggedIn', "true")
+          sessionStorage.setItem('email', loginData.email)
+          sessionStorage.setItem('id', response?.data?.result?.[0]?.user?.id)
           setTimeout(() => {
             router.push("/");
           }, 100);
         }
-        console.log('Signup successful:', response.data);
+        console.log('Login successful:', response.data);
       } catch (error) {
-        console.error('Signup error:', error);
+        console.error('Login error:', error);
       }
     }
   };
@@ -57,9 +60,9 @@ const Login = () => {
           <button className={styles.loginButton}>LOGIN</button>
           <span className={styles.linkContainer}>
             <p>Don't have an Account?</p>
-            <button type="submit" className={styles.signupBtn}>
+            <span onClick={() => router.push('/signup')} className={styles.signupBtn} >
               SIGN UP
-            </button>
+            </span>
           </span>
         </form>
       </div>
