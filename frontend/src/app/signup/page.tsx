@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 const Signup = () => {
-  const BASE_URL = 'http://localhost:8000'
+  const BASE_URL = 'https://ecomm-neon-tech.vercel.app'
   const router = useRouter()
   const [signupData,setSignupData] = useState({
     name:"",

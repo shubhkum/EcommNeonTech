@@ -9,7 +9,7 @@ const Verify = () => {
   const [value, setValue] = useState([]);
   const router = useRouter() 
   console.log(value,'value');
-  const BASE_URL = 'http://localhost:8000'
+  const BASE_URL = 'https://ecomm-neon-tech.vercel.app'
   
   const handleSubmit = async (otp) => {
     const payload = otp || value;

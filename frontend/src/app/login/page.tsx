@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 
 const Login = () => {
-  const BASE_URL = 'http://localhost:8000'
+  const BASE_URL = 'https://ecomm-neon-tech.vercel.app'
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
