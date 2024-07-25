@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  posts     Post[]   
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  name         String
+  password     String
+  otp        String?
+  isVerified       Boolean    @default(false)
+  selectedCategories Category[] @relation("UserCategories")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
-}
+model Category {
+  id           Int      @id @default(autoincrement())
+  name         String
+  users         User[] @relation("UserCategories")
+} 
