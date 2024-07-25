@@ -102,10 +102,14 @@ app.post(`/verifyUser`, async (req,res) => {
 
 app.get(`/user/:id`, async (req, res) => {
   const {id} = req.params
-  const result = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { id: Number(id) },
+    select: {name:true, email: true, selectedCategories: true}
   })
-  res.json(result)
+    if (!user) {
+      return response(res, 400, { message: 'Invalid user' });
+    }
+    return response(res, 200 , {message: 'User fetched successfully', user:user})
 })
 
 //To update the selected category into user table
