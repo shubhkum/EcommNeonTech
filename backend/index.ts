@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 const bcrypt = require('bcryptjs')
 dotenv.config();
 const {faker}  = require('@faker-js/faker')
+const {RequestHandler} = require('express');
 const  express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -16,11 +17,11 @@ const generateOTP = require('./utils/otp-generator.js')
 const {sendEmail} = require('./utils/nodemailer.js')
 console.log(response,generateOTP,sendEmail,'response');
 
-app.get('/users', async (req, res) => {
+app.get('/users', async (req:typeof RequestHandler, res: typeof RequestHandler) => {
   const users = await prisma.user.findMany()  
   res.json(users)
 })
-app.get('/categories', async (req, res) => {
+app.get('/categories', async (req: typeof RequestHandler, res: typeof RequestHandler) => {
   try{
     const categories = await prisma.category.findMany()  
     if (!categories) {
@@ -28,12 +29,12 @@ app.get('/categories', async (req, res) => {
     }
     return response(res, 200 , {message: 'All categories fetched',categories:categories})
 
-  } catch (error) {
-    return response(res, 500 , {message: error.message})
+  } catch (error:unknown) {
+    return response(res, 500 , {message: error})
   }
 })
 
-app.post(`/user`, async (req, res) => {
+app.post(`/user`, async (req: typeof RequestHandler, res: typeof RequestHandler) => {
     try{
       const otp = generateOTP()
       const salt = await bcrypt.genSalt(10); 
@@ -50,11 +51,11 @@ app.post(`/user`, async (req, res) => {
       sendEmail(email, 'Your OTP', `Your OTP is: ${otp}`)
       return response(res, 200, {message: 'User registered successfully', user: result})
     } catch(error) {
-      return response(res, 500 , {message: error.message})
+      return response(res, 500 , {message: error})
     }
 })
 
-app.post(`/verifyEmail`, async (req,res) => {
+app.post(`/verifyEmail`, async (req:typeof RequestHandler,res:typeof RequestHandler) => {
   try{
     const {email, otp} = req.body
     const user = await prisma.user.findUnique({
@@ -73,9 +74,9 @@ app.post(`/verifyEmail`, async (req,res) => {
     });
     return response(res, 200, { message: 'Email verification successful', user: updateUser });
   } catch (error) {
-}
+    }
 })
-app.post(`/verifyUser`, async (req,res) => {
+app.post(`/verifyUser`, async (req:typeof RequestHandler,res:typeof RequestHandler) => {
   try{
     const {email, password} = req.body
     const user = await prisma.user.findUnique({
@@ -100,7 +101,7 @@ app.post(`/verifyUser`, async (req,res) => {
 }
 })
 
-app.get(`/user/:id`, async (req, res) => {
+app.get(`/user/:id`, async (req:typeof RequestHandler, res:typeof RequestHandler) => {
   const {id} = req.params
   const user = await prisma.user.findUnique({
     where: { id: Number(id) },
@@ -113,14 +114,14 @@ app.get(`/user/:id`, async (req, res) => {
 })
 
 //To update the selected category into user table
-app.put('/user/:id', async (req, res) => {
+app.put('/user/:id', async (req:typeof RequestHandler, res:typeof RequestHandler) => {
   const { id } = req.params;
   const { selectedCategories } = req.body; 
 
   try {
     const updatedUser = await prisma.user.update({
       where: { id: Number(id) },
-      data: { selectedCategories: { set: selectedCategories.map(categoryId => ({ id: categoryId })) } },
+      data: { selectedCategories: { set: selectedCategories.map((categoryId: number) => ({ id: categoryId })) } },
       include: {
         selectedCategories: true
       }}
