@@ -34,7 +34,7 @@ export default function Home() {
   useEffect(() => {
     const getSelectedCategories = async () => {
       try {
-        if (typeof window == 'undefined') {
+        if (typeof window !== 'undefined') {
           const id = sessionStorage.getItem("id")
           const response = await axios.get(`${BASE_URL}/user/${id}`);
           if (response.status == 200){
@@ -78,7 +78,7 @@ export default function Home() {
 
   const updateCategory = async (newTempSelected:any) => {
     try {
-      if (typeof window == 'undefined') {
+      if (typeof window !== 'undefined') {
         const id = sessionStorage.getItem("id")
         const categoriesId = newTempSelected?.map((item:any) => item.id)
         const response = await axios.put(`${BASE_URL}/user/${id}`,{
